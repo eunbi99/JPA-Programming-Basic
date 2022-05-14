@@ -37,7 +37,7 @@ public class JpaMain {
             findMember.setName("HelloJPA");
             */
 
-            // Member객체를 전부 가져온다.
+            /* Member객체를 전부 가져온다.
            List<Member> result = em.createQuery("select m from Member as m",Member.class)
                    .setFirstResult(5)
                    .setMaxResults(8)
@@ -45,6 +45,25 @@ public class JpaMain {
            for (Member member : result) {
                System.out.println("member.name" + member.getName());
            }
+           */
+
+            /*
+            // 비영속
+            Member member = new Member();
+            member.setId(101L); // 1차 캐시에 저장
+            member.setName("Hello JPA!");
+
+            // 영속
+            System.out.println("==== BEFORE ====");
+            em.persist(member);
+            System.out.println("==== AFTER ====");
+            */
+
+            Member findMember1 = em.find(Member.class, 101L);
+            Member findMember2 = em.find(Member.class, 101L); // 영속 컨텍스트에 저장되어있는 1차 캐시를 먼저 확인하고 반환! - select 쿼리 x
+
+            System.out.println("result = " + (findMember1 == findMember2)); // true
+
             tx.commit();
         } catch (Exception e) {
             tx.rollback();
